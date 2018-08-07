@@ -4,11 +4,14 @@
   <title>TinyApp</title>
 </head>
 <body>
+  <header>
+    <% include ./partials/_header %>
+  </header>
 <a href="#">A Link to Shorten a new URL</a>
 <h3> Shortened URLS</h3>
 <ul>
-  <% for(var urlDatabase in urls) { %>
-    <li><%= urlDatabase + ": " + urls[urlDatabase] %></li>
+  <% for(var key in urls) { %>
+    <li><%= key + ": " + urls[key] %></li>
   <% } %>
 </ul>
 </body>
