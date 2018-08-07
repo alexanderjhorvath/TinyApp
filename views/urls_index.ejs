@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>TinyApp</title>
+</head>
+<body>
+<a href="#">A Link to Shorten a new URL</a>
+<h3> Shortened URLS</h3>
+<ul>
+  <% for(var urlDatabase in urls) { %>
+    <li><%= urlDatabase + ": " + urls[urlDatabase] %></li>
+  <% } %>
+</ul>
+</body>
+</html>
