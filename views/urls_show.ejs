@@ -10,10 +10,9 @@
 <h3> Full URL</h3>
 Long URL: <%= longURL %><br>
 Shortened URL: <%= shortURL %><P>
-Update URL:
 <form method="POST" action="/urls/<%= shortURL %>/update">
-  <label for="longURL">
-  <input type="text" id="longURL" name="longURL" value="<%= longURL %>"><br>
+  <label for="longURL">Update URL:</label>
+  <input type="text" id="longURL" name="longURL" value="<%= longURL %>" style="width:300px"><br>
   <small id="help">Be sure to include http://</small><br>
   <button type="submit">Submit</button>
 </form>

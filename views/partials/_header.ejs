@@ -1,3 +1,21 @@
 <!-- views/partials/_header.ejs -->
-
-HEADER!
+<!DOCTYPE html>
+<html lang="eng">
+<head>
+  <title></title>
+</head>
+<body>
+<% if (username === undefined) { %>
+<form method="POST" action="/login">
+  <label for="username">Login: </label>
+  <input type="text" id="username" name="username" value=""><br>
+  <button type="submit">Submit</button>
+</form>
+<% } else { %>
+Username: <%= username %>
+<form method="POST" action="/logout">
+  <button type="submit">Logout</button>
+</form>
+<% } %>
+</body>
+</html>
