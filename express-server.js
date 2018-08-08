@@ -54,15 +54,24 @@ app.post("/urls/:id/delete", (req, res) => {
   // console.log(req.params.id);
   deleteURL(req.params.id);
   res.redirect("/urls");
-})
+});
+
+app.post("/urls/:id/update", (req, res) => {
+  updateURL(req.params.id, req.body.longURL);
+  res.redirect("/urls");
+});
 
 function generateRandomString() {
   return Math.floor((1 + Math.random()) * 0x100000000).toString(36).substring(1);
 }
 
 function deleteURL(id) {
-  //urlDatabase = urlDatabase.filter((test) => test.id !== id);
   delete urlDatabase[id];
+}
+
+function updateURL(id, newURL) {
+  deleteURL(id);
+  urlDatabase[id] = newURL;
 }
 
 app.listen(PORT, () => {
