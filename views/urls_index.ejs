@@ -7,11 +7,15 @@
   <header>
     <% include ./partials/_header %>
   </header>
-<a href="#">A Link to Shorten a new URL</a>
+<a href="/urls/new">A Link to Shorten a new URL</a>
 <h3> Shortened URLS</h3>
 <ul>
   <% for(var key in urls) { %>
-    <li><%= key + ": " + urls[key] %></li>
+    <li><%= key + ": " + urls[key] %>
+      <form method="POST" action="/urls/<%= key %>/delete">
+        <button type='submit' class='btn btn-danger'>Delete</button>
+      </form>
+    </li>
   <% } %>
 </ul>
 </body>
