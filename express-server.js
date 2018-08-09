@@ -48,11 +48,15 @@ app.post("/logout", (req, res) => {
 })
 
 app.post("/register", (req, res) => {
-  let userID = generateRandomString();
-  createUser(userID, req.body.email, req.body.password)
-  console.log("Users: " + JSON.stringify(users));
-  res.cookie("user_id", userID);
-  res.redirect("/urls");
+  if (req.body.email === "" || req.body.password === "") {
+    res.sendStatus(400);
+  } else {
+    let userID = generateRandomString();
+    createUser(userID, req.body.email, req.body.password)
+    console.log("Users: " + JSON.stringify(users));
+    res.cookie("user_id", userID);
+    res.redirect("/urls");
+  }
 })
 
 app.get("/urls/new", (req, res) => {

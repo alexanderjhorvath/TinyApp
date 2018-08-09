@@ -1,12 +1,18 @@
-
-var urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
-};
-
-function deleteURL(id) {
-  urlDatabase = urlDatabase.filter((test) => test.id !== id);
+const users = {
+  "userRandomID" : {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
 }
 
-deleteURL(b2XVn2);
-console.log(urlDatabase);
+var email = "user@example.com";
+
+if(users.hasOwnProperty(email)) {
+  console.log(email + "is a property");
+}
