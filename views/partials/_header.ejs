@@ -5,14 +5,14 @@
   <title></title>
 </head>
 <body>
-<% if (username === undefined) { %>
+<% if (users === undefined) { %>
 <form method="POST" action="/login">
   <label for="username">Login: </label>
   <input type="text" id="username" name="username" value=""><br>
   <button type="submit">Submit</button>
 </form>
 <% } else { %>
-Username: <%= username %>
+email: <%= users.email %>
 <form method="POST" action="/logout">
   <button type="submit">Logout</button>
 </form>

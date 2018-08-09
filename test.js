@@ -13,6 +13,17 @@ const users = {
 
 var email = "user@example.com";
 
-if(users.hasOwnProperty(email)) {
-  console.log(email + "is a property");
+var results = 0;
+
+function verifyAccount(newEmail) {
+  console.log("new email: " + newEmail);
+Object.keys(users).forEach(function(key) {
+  if (users[key] == newEmail) {
+      return false;
+    } else {
+      return true;
+    }
+  });
 }
+
+console.log(verifyAccount(email));
