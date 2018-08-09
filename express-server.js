@@ -55,6 +55,8 @@ app.post("/login", (req, res) => {
   if (user && users[key].password === req.body.password) {
     res.cookie("user_id", user);
     res.redirect("/urls");
+  } else {
+    res.sendStatus(403);
   }
 });
 
@@ -139,7 +141,7 @@ function updateURL(id, newURL) {
 }
 
 function createUser(id, email, password) {
-  console.log("Email: " + email + "Password: " + password);
+  // console.log("Email: " + email + " Password: " + password);
   users[id] = {id: id, email: email, password: password};
 }
 
