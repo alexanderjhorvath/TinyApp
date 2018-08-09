@@ -15,9 +15,27 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID" : {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
 app.get("/", (req, res) => {
   res.end("Hello!");
 });
+
+app.get("/register", (req, res) => {
+  let templateVars = { username: req.cookies["username"] };
+  res.render("register", templateVars);
+})
 
 app.post("/login", (req, res) => {
   res.cookie("username", req.body.username);
@@ -26,6 +44,14 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("username");
+  res.redirect("/urls");
+})
+
+app.post("/register", (req, res) => {
+  let userID = generateRandomString();
+  createUser(userID, req.body.email, req.body.password)
+  console.log("Users: " + JSON.stringify(users));
+  res.cookie("user_id", userID);
   res.redirect("/urls");
 })
 
@@ -86,6 +112,10 @@ function deleteURL(id) {
 function updateURL(id, newURL) {
   deleteURL(id);
   urlDatabase[id] = newURL;
+}
+
+function createUser(id, email, password) {
+  users[id] = {id: id, email: email, password: password};
 }
 
 app.listen(PORT, () => {
