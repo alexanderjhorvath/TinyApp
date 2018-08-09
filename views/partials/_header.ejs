@@ -6,10 +6,12 @@
 </head>
 <body>
 <% if (users === undefined) { %>
-<form method="POST" action="/login">
-  <label for="username">Login: </label>
-  <input type="text" id="username" name="username" value=""><br>
-  <button type="submit">Submit</button>
+Not logged in
+<form method="GET" action="/login">
+  <button type="submit">Login</button>
+</form>
+<form method="GET" action="/register">
+  <button type="submit">Register</button>
 </form>
 <% } else { %>
 email: <%= users.email %>
