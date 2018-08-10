@@ -5,8 +5,12 @@ var PORT = 8080;
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({extended: true}));
 
-const cookieParser = require("cookie-parser");
-app.use(cookieParser());
+const cookieSession = require("cookie-session");
+app.use(cookieSession({
+  name: 'session',
+  keys: ['monkey', 'brain', 'franklin'],
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}));
 
 const bcrypt = require("bcrypt");
 
@@ -41,12 +45,12 @@ app.get("/", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  let templateVars = { users: users[req.cookies.user_id] };
+  let templateVars = { users: users[req.session.user_id] };
   res.render("register", templateVars);
 });
 
 app.get("/login", (req, res) => {
-  let templateVars = { users: users[req.cookies.user_id] };
+  let templateVars = { users: users[req.session.user_id] };
   res.render("login", templateVars);
 });
 
@@ -59,10 +63,13 @@ app.post("/login", (req, res) => {
   for (let key in users) {
     if (users[key].email === req.body.email) {
     user = users[key].id;
+    } else {
+      res.sendStatus(400);
     }
   }
   if (bcrypt.compareSync(req.body.password, users[user].hashedPassword) === true) {
-    res.cookie("user_id", user);
+    req.session.user_id = user;
+    // res.cookie("user_id", user);
     res.redirect("/urls");
   } else {
     res.sendStatus(403);
@@ -70,7 +77,8 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
+  req.session = null;
+  // res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -87,13 +95,14 @@ app.post("/register", (req, res) => {
   let userID = generateRandomString();
   let hashedPassword = bcrypt.hashSync(req.body.password, 10);
   createUser(userID, req.body.email, hashedPassword);
-  res.cookie("user_id", userID);
+  req.session.user_id = userID;
+  // res.cookie("user_id", userID);
   res.redirect("/urls");
 });
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = { users: users[req.cookies.user_id] };
-  if (!req.cookies.user_id) {
+  let templateVars = { users: users[req.session.user_id] };
+  if (!req.session.user_id) {
     res.redirect("/register");
   } else {
     res.render("urls_new", templateVars);
@@ -105,14 +114,14 @@ app.get("/urls.json", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  let templateVars = { urls: urlsForUser(req.cookies.user_id), users: users[req.cookies.user_id] };
+  let templateVars = { urls: urlsForUser(req.session.user_id), users: users[req.session.user_id] };
   // console.log(templateVars)
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id].originalURL, users: users[req.cookies.user_id] };
-  if (req.cookies.user_id !== urlDatabase[req.params.id].userID) {
+  let templateVars = { shortURL: req.params.id, longURL: urlDatabase[req.params.id].originalURL, users: users[req.session.user_id] };
+  if (req.session.user_id !== urlDatabase[req.params.id].userID) {
     res.sendStatus(403);
   } else {
     res.render("urls_show", templateVars);
@@ -130,12 +139,12 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   var shortURLKey = generateRandomString();
-  urlDatabase[shortURLKey] = {originalURL: req.body.longURL, userID: req.cookies.user_id};
+  urlDatabase[shortURLKey] = {originalURL: req.body.longURL, userID: req.session.user_id};
   res.redirect("/urls");
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  if (req.cookies.user_id === urlDatabase[req.params.id].userID) {
+  if (req.session.user_id === urlDatabase[req.params.id].userID) {
     deleteURL(req.params.id);
     res.redirect("/urls");
   } else {
@@ -144,8 +153,8 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  if (req.cookies.user_id === urlDatabase[req.params.id].userID) {
-    updateURL(req.params.id, req.body.longURL, req.cookies.user_id);
+  if (req.session.user_id === urlDatabase[req.params.id].userID) {
+    updateURL(req.params.id, req.body.longURL, req.session.user_id);
     res.redirect("/urls");
   } else {
     res.sendStatus(403);
