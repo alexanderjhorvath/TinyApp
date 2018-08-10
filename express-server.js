@@ -55,7 +55,6 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  // console.log(users);
   if (req.body.email === "" || req.body.password === "") {
     res.sendStatus(400);
   }
@@ -63,13 +62,10 @@ app.post("/login", (req, res) => {
   for (let key in users) {
     if (users[key].email === req.body.email) {
     user = users[key].id;
-    } else {
-      res.sendStatus(400);
     }
   }
   if (bcrypt.compareSync(req.body.password, users[user].hashedPassword) === true) {
     req.session.user_id = user;
-    // res.cookie("user_id", user);
     res.redirect("/urls");
   } else {
     res.sendStatus(403);
@@ -78,7 +74,6 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   req.session = null;
-  // res.clearCookie("user_id");
   res.redirect("/urls");
 });
 
@@ -173,12 +168,10 @@ function deleteURL(id) {
 function updateURL(id, newURL, userID) {
   deleteURL(id);
   urlDatabase[id] = {originalURL: newURL, userID: userID};
-  // console.log(urlDatabase);
 }
 
 function createUser(id, email, password) {
   users[id] = {id: id, email: email, hashedPassword: password};
-  // console.log(users);
 }
 
 function urlsForUser(id) {
