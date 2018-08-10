@@ -11,7 +11,7 @@
 <h3> Shortened URLS</h3>
 <ul>
   <% for(var key in urls) { %>
-    <li><%= key + ": " + urls[key] %>
+    <li><%= key + ": " + urls[key].longURL %>
       <a href="/urls/<%= key %>">Edit</a>
       <form method="POST" action="/urls/<%= key %>/delete">
         <button type='submit' class='btn btn-danger'>Delete</button>
