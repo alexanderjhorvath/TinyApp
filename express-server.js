@@ -61,14 +61,17 @@ app.post("/login", (req, res) => {
   let user;
   for (let key in users) {
     if (users[key].email === req.body.email) {
-    user = users[key].id;
+      user = users[key].id;
+      break;
+    } else {
+      res.sendStatus(403);
     }
   }
   if (bcrypt.compareSync(req.body.password, users[user].hashedPassword) === true) {
     req.session.user_id = user;
     res.redirect("/urls");
   } else {
-    res.sendStatus(403);
+    res.sendStatus(400);
   }
 });
 
