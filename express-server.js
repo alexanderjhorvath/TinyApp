@@ -59,17 +59,18 @@ app.post("/login", (req, res) => {
     res.sendStatus(400);
   }
   let user;
-  for (let key in users) {
+  for (var key in users) {
     if (users[key].email === req.body.email) {
       user = users[key].id;
-      break;
+    }
+  }
+  if (user) {
+    if (bcrypt.compareSync(req.body.password, users[user].hashedPassword) === true) {
+      req.session.user_id = user;
+      res.redirect("/urls");
     } else {
       res.sendStatus(403);
     }
-  }
-  if (bcrypt.compareSync(req.body.password, users[user].hashedPassword) === true) {
-    req.session.user_id = user;
-    res.redirect("/urls");
   } else {
     res.sendStatus(400);
   }
